@@ -1,0 +1,182 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Public/role directory entry linked to a Firebase Auth UID",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "fullName": { "type": "string", "minLength": 1, "maxLength": 150 },
+        "role": { "type": "string", "enum": ["SUPER_ADMIN", "LIBRARIAN", "FACULTY", "STUDENT"] },
+        "department": { "type": "string", "maxLength": 120 },
+        "status": { "type": "string", "enum": ["ACTIVE", "INACTIVE"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "fullName", "role", "department", "status", "createdAt", "updatedAt"]
+    },
+    "UserPrivateInfo": {
+      "title": "UserPrivateInfo",
+      "description": "Isolated PII record for a user (email, phone, registration/employee ID)",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "memberCode": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "updatedAt"]
+    },
+    "BookRecord": {
+      "title": "BookRecord",
+      "description": "Catalogued book title in HIT Civil Engineering Digital Library",
+      "type": "object",
+      "properties": {
+        "bookCode": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "isbn": { "type": "string", "maxLength": 32 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 250 },
+        "author": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "publisher": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "subject": { "type": "string", "maxLength": 120 },
+        "publicationYear": { "type": "number" },
+        "totalCopies": { "type": "number" },
+        "availableCopies": { "type": "number" },
+        "archived": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["bookCode", "title", "author", "category", "totalCopies", "availableCopies", "archived", "createdAt", "updatedAt"]
+    },
+    "BookCopyRecord": {
+      "title": "BookCopyRecord",
+      "description": "Individual physical book copy with unique accession number",
+      "type": "object",
+      "properties": {
+        "accessionNumber": { "type": "string", "minLength": 3, "maxLength": 64, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "bookId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "copyNumber": { "type": "number" },
+        "status": { "type": "string", "enum": ["AVAILABLE", "ISSUED", "RESERVED", "UNDER_MAINTENANCE", "LOST", "DAMAGED", "WITHDRAWN"] },
+        "condition": { "type": "string", "maxLength": 60 },
+        "shelfNumber": { "type": "string", "maxLength": 40 },
+        "rackNumber": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["accessionNumber", "bookId", "copyNumber", "status", "createdAt", "updatedAt"]
+    },
+    "CirculationRecord": {
+      "title": "CirculationRecord",
+      "description": "Book issue/return transaction tied to a physical copy and borrower",
+      "type": "object",
+      "properties": {
+        "borrowerUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "copyId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "accessionNumber": { "type": "string", "minLength": 3, "maxLength": 64 },
+        "bookTitle": { "type": "string", "minLength": 1, "maxLength": 250 },
+        "status": { "type": "string", "enum": ["ISSUED", "RETURNED", "OVERDUE", "LOST"] },
+        "issuedAt": { "type": "string", "format": "date-time" },
+        "dueDate": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["borrowerUid", "copyId", "accessionNumber", "bookTitle", "status", "issuedAt", "dueDate", "updatedAt"]
+    },
+    "ReservationRecord": {
+      "title": "ReservationRecord",
+      "description": "Book reservation request owned by a borrower",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "bookId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "bookTitle": { "type": "string", "minLength": 1, "maxLength": 250 },
+        "status": { "type": "string", "enum": ["ACTIVE", "READY", "FULFILLED", "CANCELLED", "EXPIRED"] },
+        "queuePosition": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "bookId", "bookTitle", "status", "queuePosition", "createdAt", "updatedAt"]
+    },
+    "AcquisitionRequestRecord": {
+      "title": "AcquisitionRequestRecord",
+      "description": "Book recommendation submitted by faculty or students",
+      "type": "object",
+      "properties": {
+        "requesterUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 250 },
+        "author": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "subject": { "type": "string", "maxLength": 120 },
+        "priority": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH"] },
+        "status": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED", "PURCHASED"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["requesterUid", "title", "author", "priority", "status", "createdAt", "updatedAt"]
+    },
+    "InstitutionSettingRecord": {
+      "title": "InstitutionSettingRecord",
+      "description": "Institutional branding and policy configuration",
+      "type": "object",
+      "properties": {
+        "institutionName": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "departmentName": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "location": { "type": "string", "maxLength": 200 },
+        "accessionPrefix": { "type": "string", "maxLength": 32 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["institutionName", "departmentName", "updatedAt"]
+    },
+    "AuditLogRecord": {
+      "title": "AuditLogRecord",
+      "description": "Immutable audit log entry for administrative and circulation actions",
+      "type": "object",
+      "properties": {
+        "actorUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "action": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "entityType": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "entityId": { "type": "string", "maxLength": 128 },
+        "summary": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["actorUid", "action", "entityType", "summary", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Non-PII role and directory metadata keyed by Firebase Auth UID"
+    },
+    "/users/{userId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/UserPrivateInfo" },
+      "description": "Isolated PII subcollection readable only by owner or staff admin"
+    },
+    "/books/{bookId}": {
+      "schema": { "$ref": "#/entities/BookRecord" },
+      "description": "Publicly browsable (authenticated) library catalogue titles"
+    },
+    "/bookCopies/{copyId}": {
+      "schema": { "$ref": "#/entities/BookCopyRecord" },
+      "description": "Physical copies linked to books with unique accession numbers"
+    },
+    "/circulations/{txId}": {
+      "schema": { "$ref": "#/entities/CirculationRecord" },
+      "description": "Issue and return circulation transactions scoped to borrower or staff"
+    },
+    "/reservations/{reservationId}": {
+      "schema": { "$ref": "#/entities/ReservationRecord" },
+      "description": "Book reservation queue entries scoped to requester or staff"
+    },
+    "/acquisitionRequests/{requestId}": {
+      "schema": { "$ref": "#/entities/AcquisitionRequestRecord" },
+      "description": "New book purchase requests scoped to requester or staff"
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/InstitutionSettingRecord" },
+      "description": "Institutional settings managed strictly by Super Admin"
+    },
+    "/auditLogs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLogRecord" },
+      "description": "Append-only staff audit log"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "HIT Civil Engineering – Digital Library",
+  "description": "Departmental Digital Library Management System for Haldia Institute of Technology, Department of Civil Engineering. Knowledge. Research. Innovation.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
